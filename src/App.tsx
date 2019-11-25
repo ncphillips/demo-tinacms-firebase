@@ -1,16 +1,21 @@
-import React from "react";
-import logo from "./logo.svg";
+import React, { useState } from "react";
 import "./App.css";
 import { FirebaseProvider } from "./Firebase";
 import { PageList } from "./PageList";
+import { TinaCMS, Tina } from "tinacms";
 
 const App: React.FC = () => {
+  const [cms] = useState(() => {
+    return new TinaCMS();
+  });
   return (
-    <FirebaseProvider>
-      <div className="App">
-        <PageList />
-      </div>
-    </FirebaseProvider>
+    <Tina cms={cms} position="displace">
+      <FirebaseProvider>
+        <div className="App">
+          <PageList />
+        </div>
+      </FirebaseProvider>
+    </Tina>
   );
 };
 
