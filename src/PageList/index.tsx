@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { usePageCollection, useFirestore } from "../Firebase";
-import { useLocalForm, usePlugin, usePlugins } from "react-tinacms";
-import { AddContentPlugin } from "tinacms";
+import { useLocalForm, usePlugins } from "react-tinacms";
+import { AddContentPlugin, ActionButton } from "tinacms";
 
 export function PageList() {
   usePageCreatorPlugin();
@@ -30,14 +30,22 @@ const PAGE_FIELDS = [
 ];
 
 function usePageForm(page: any) {
+  const firestore = useFirestore();
   return useLocalForm({
     id: page.id,
     initialValues: page,
     label: page.title,
     fields: PAGE_FIELDS,
-    onSubmit() {
-      alert("TODO");
-    }
+    onSubmit({ id, ...data }) {
+      if (!firestore) return;
+      firestore
+        .collection("pages")
+        .doc(id)
+        .update(data)
+        .then(a => console.log(a))
+        .catch(e => console.log(e));
+    },
+    actions: [ActionDeletePage, ActionReset]
   });
 }
 
@@ -56,3 +64,34 @@ function usePageCreatorPlugin() {
   }));
   usePlugins(plugin);
 }
+
+const ActionDeletePage = ({ form }: any) => {
+  const firestore = useFirestore();
+  return (
+    <ActionButton
+      onClick={() => {
+        if (!firestore) return;
+        firestore
+          .collection("pages")
+          .doc(form.values.id)
+          .delete()
+          .then(a => console.log(a))
+          .catch(e => console.log(e));
+      }}
+    >
+      Delete
+    </ActionButton>
+  );
+};
+
+const ActionReset = ({ form, close }: any) => {
+  return (
+    <ActionButton
+      onClick={() => {
+        form.finalForm.reset();
+      }}
+    >
+      Reset
+    </ActionButton>
+  );
+};
