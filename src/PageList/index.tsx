@@ -45,7 +45,26 @@ function usePageForm(page: any) {
         .then(a => console.log(a))
         .catch(e => console.log(e));
     },
-    actions: [ActionDeletePage, ActionReset]
+    actions: [
+      (props: any) => {
+        return (
+          <ActionButton
+            onClick={() => {
+              if (!firestore) return;
+              firestore
+                .collection("pages")
+                .doc(props.form.values.id)
+                .delete()
+                .then(a => console.log(a))
+                .catch(e => console.log(e));
+            }}
+          >
+            Delete
+          </ActionButton>
+        );
+      },
+      ActionReset
+    ]
   });
 }
 
@@ -64,25 +83,6 @@ function usePageCreatorPlugin() {
   }));
   usePlugins(plugin);
 }
-
-const ActionDeletePage = ({ form }: any) => {
-  const firestore = useFirestore();
-  return (
-    <ActionButton
-      onClick={() => {
-        if (!firestore) return;
-        firestore
-          .collection("pages")
-          .doc(form.values.id)
-          .delete()
-          .then(a => console.log(a))
-          .catch(e => console.log(e));
-      }}
-    >
-      Delete
-    </ActionButton>
-  );
-};
 
 const ActionReset = ({ form, close }: any) => {
   return (
