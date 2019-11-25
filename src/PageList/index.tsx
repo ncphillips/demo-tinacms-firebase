@@ -1,6 +1,6 @@
 import React from "react";
 import { usePageCollection } from "../Firebase";
-import { useLocalForm } from "react-tinacms";
+import { useLocalForm, usePlugin } from "react-tinacms";
 
 export function PageList() {
   const pages = usePageCollection();
@@ -25,7 +25,11 @@ function usePageForm(page: any) {
     id: page.id,
     initialValues: page,
     label: page.title,
-    fields: [{ name: "title", component: "text" }],
+    fields: [
+      { name: "title", label: "Title", component: "text" },
+      { name: "published", label: "Publisehd", component: "toggle" },
+      { name: "body", label: "Body", component: "markdown" }
+    ],
     onSubmit() {
       alert("TODO");
     }
