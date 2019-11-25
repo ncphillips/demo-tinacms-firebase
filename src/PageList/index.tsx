@@ -15,15 +15,19 @@ export function PageList() {
 }
 
 const PageListItem = (props: any) => {
-  const [page] = useLocalForm({
-    id: props.page.id,
-    initialValues: props.page,
-    label: props.page.title,
+  const [page] = usePageForm(props.page);
+
+  return <li>{page.title}</li>;
+};
+
+function usePageForm(page: any) {
+  return useLocalForm({
+    id: page.id,
+    initialValues: page,
+    label: page.title,
     fields: [{ name: "title", component: "text" }],
     onSubmit() {
       alert("TODO");
     }
   });
-
-  return <li>{page.title}</li>;
-};
+}

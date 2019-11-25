@@ -8,6 +8,7 @@ const App: React.FC = () => {
   const [cms] = useState(() => {
     return new TinaCMS();
   });
+
   return (
     <Tina cms={cms} position="displace">
       <FirebaseProvider>
