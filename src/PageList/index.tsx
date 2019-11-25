@@ -31,6 +31,7 @@ const PAGE_FIELDS = [
 
 function usePageForm(page: any) {
   const firestore = useFirestore();
+
   return useLocalForm({
     id: page.id,
     initialValues: page,
@@ -46,6 +47,9 @@ function usePageForm(page: any) {
         .catch(e => console.log(e));
     },
     actions: [
+      /**
+       * Had to define this inline because `firestore` wasn't getting updated.
+       */
       (props: any) => {
         return (
           <ActionButton
